@@ -1,0 +1,57 @@
+import React, { useState } from "react";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from "@mui/material";
+import axios from "axios";
+
+const ReferEarn = () => {
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    referrerName: "",
+    referrerEmail: "",
+    refereeName: "",
+    refereeEmail: "",
+    course: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("https://your-backend-url/api/referrals", formData);
+      alert("Referral submitted successfully!");
+      setOpen(false);
+      setFormData({ referrerName: "", referrerEmail: "", refereeName: "", refereeEmail: "", course: "" });
+    } catch (error) {
+      alert("Error submitting referral");
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-4 font-sans">
+      <h1 className="text-4xl font-semibold mb-4">Refer & Earn</h1>
+      <p className="text-lg text-gray-400">Refer a friend and enjoy exclusive rewards.</p>
+      <Button variant="contained" className="mt-6 bg-gray-800 hover:bg-gray-700 text-white rounded-full px-6 py-3 text-lg" onClick={() => setOpen(true)}>
+        Refer Now
+      </Button>
+
+      <Dialog open={open} onClose={() => setOpen(false)} className="backdrop-blur-md">
+        <DialogTitle className="text-center text-white bg-gray-900">Refer a Friend</DialogTitle>
+        <DialogContent className="bg-gray-800">
+          <TextField label="Your Name" name="referrerName" fullWidth margin="dense" onChange={handleChange} InputProps={{ style: { color: "white" }}} className="bg-gray-700"/>
+          <TextField label="Your Email" name="referrerEmail" type="email" fullWidth margin="dense" onChange={handleChange} InputProps={{ style: { color: "white" }}} className="bg-gray-700"/>
+          <TextField label="Friend's Name" name="refereeName" fullWidth margin="dense" onChange={handleChange} InputProps={{ style: { color: "white" }}} className="bg-gray-700"/>
+          <TextField label="Friend's Email" name="refereeEmail" type="email" fullWidth margin="dense" onChange={handleChange} InputProps={{ style: { color: "white" }}} className="bg-gray-700"/>
+          <TextField label="Course" name="course" fullWidth margin="dense" onChange={handleChange} InputProps={{ style: { color: "white" }}} className="bg-gray-700"/>
+        </DialogContent>
+        <DialogActions className="bg-gray-900">
+          <Button onClick={() => setOpen(false)} className="text-gray-400 hover:text-white">Cancel</Button>
+          <Button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full">Submit</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+};
+
+export default ReferEarn;
